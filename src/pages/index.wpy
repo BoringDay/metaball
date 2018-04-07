@@ -1,0 +1,163 @@
+<style lang="less">
+page,.container{
+  height: 100%;
+}
+canvas{
+  width: 100%;
+  height: 100%;
+}
+</style>
+
+<template>
+  <view class="container">
+      <canvas canvas-id="firstCanvas" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" @touchcancel=""></canvas>
+  </view>
+</template>
+
+
+<script>
+  import wepy from 'wepy'
+  import {metaball} from '../mixins/metaball.js'
+
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: 'test'
+    }
+    components = {
+    }
+
+    data = {
+    }
+
+    computed = {
+      now () {
+        return +new Date()
+      }
+    }
+
+    methods = {
+      touchstart(e){
+      },
+      touchmove(e){
+        let ctx = wx.createCanvasContext('firstCanvas')
+        let systemInfo = wx.getSystemInfoSync();
+        let ctxWidth = systemInfo.windowWidth;
+        let ctxHeight = systemInfo.windowHeight;
+        let nick = "baichun",money="2000",desc="本月剩余";
+        let month = "本月还有",last = "12天";
+        let radius1=100,radius2=30,maxDist=radius1 + radius2 * 2,center1={},center2={}
+
+        center1.x = ctxWidth/2
+        center1.y = ctxWidth/2
+        center2.x = e.touches[0].x 
+        center2.y = e.touches[0].y 
+
+        let a = metaball(
+          radius1,
+          radius2,
+          [center1.x, center1.y],
+          [center2.x, center2.y],
+          maxDist
+        );
+
+        ctx.setFillStyle('#4543a0')
+        ctx.fillRect(0, 0, ctxWidth, ctxHeight)
+        ctx.setFillStyle('#FFFFFF')
+        ctx.arc(center1.x, center1.y, radius1, 0, 2 * Math.PI, true)
+        ctx.fill()
+
+        //<=1完全重叠;==2完全不重叠;>2重叠
+        if (a.length <= 1) {} 
+        if (a.length >= 2) {
+          ctx.arc(center2.x,center2.y,radius2,0,Math.PI * 2,true)
+          ctx.fill()
+        }
+
+        if(a.length>2) {
+          // [p1, h1, h3, p3, p4, h4, h2, p2]
+          ctx.moveTo(a[7][0], a[7][1])
+          ctx.lineTo(a[0][0], a[0][1])
+          ctx.bezierCurveTo(
+            a[1][0],
+            a[1][1],
+            a[2][0],
+            a[2][1],
+            a[3][0],
+            a[3][1]
+          )
+          ctx.lineTo(a[4][0], a[4][1])
+          ctx.bezierCurveTo(
+            a[5][0],
+            a[5][1],
+            a[6][0],
+            a[6][1],
+            a[7][0],
+            a[7][1]
+          )
+          ctx.fill()
+        }
+
+        ctx.setFontSize(15)
+        ctx.setFillStyle('#fb8788') 
+        ctx.fillText(nick, (ctxWidth - ctx.measureText(nick).width) / 2, ctxWidth/2-25)
+        ctx.setFontSize(30)
+        ctx.setFillStyle('#000000')
+        ctx.fillText(money, (ctxWidth - ctx.measureText(money).width) / 2, ctxWidth/2+15)
+        ctx.setFontSize(12)
+        ctx.setFillStyle('#cccccc')
+        ctx.fillText(desc, (ctxWidth - ctx.measureText(desc).width) / 2, ctxWidth/2+40)
+        ctx.setFontSize(12)
+        ctx.setFillStyle('#cccccc')
+        ctx.fillText(month, (ctxWidth - ctx.measureText(month).width) / 2, ctxWidth-30)
+        ctx.setFontSize(26)
+        ctx.fillText(last, (ctxWidth - ctx.measureText(last).width) / 2, ctxWidth)
+        ctx.draw()
+      },
+      touchend(e){
+        this.initPanel()
+      }
+    }
+
+    initPanel(){
+      let ctx = wx.createCanvasContext('firstCanvas')
+      let systemInfo = wx.getSystemInfoSync();
+      let ctxWidth = systemInfo.windowWidth;
+      let ctxHeight = systemInfo.windowHeight;
+      let nick = "baichun",money="2000",desc="本月剩余";
+      let month = "本月还有",last = "12天";
+
+      ctx.setFillStyle('#4543a0')
+      ctx.fillRect(0, 0, ctxWidth, ctxHeight)
+      ctx.setFillStyle('#FFFFFF')
+      ctx.arc(ctxWidth/2, ctxWidth/2, 100, 0, 2 * Math.PI, true)
+      ctx.fill()
+      ctx.setFontSize(15)
+      ctx.setFillStyle('#fb8788') 
+      ctx.fillText(nick, (ctxWidth - ctx.measureText(nick).width) / 2, ctxWidth/2-25)
+      ctx.setFontSize(30)
+      ctx.setFillStyle('#000000')
+      ctx.fillText(money, (ctxWidth - ctx.measureText(money).width) / 2, ctxWidth/2+15)
+      ctx.setFontSize(12)
+      ctx.setFillStyle('#cccccc')
+      ctx.fillText(desc, (ctxWidth - ctx.measureText(desc).width) / 2, ctxWidth/2+40)
+      ctx.setFontSize(12)
+      ctx.setFillStyle('#cccccc')
+      ctx.fillText(month, (ctxWidth - ctx.measureText(month).width) / 2, ctxWidth-30)
+      ctx.setFontSize(26)
+      ctx.fillText(last, (ctxWidth - ctx.measureText(last).width) / 2, ctxWidth)
+      ctx.draw()
+    }
+
+    draw(e){
+      
+    }
+
+    events = {
+    }
+
+    onLoad() {
+      this.initPanel()
+    }
+  }
+</script>
