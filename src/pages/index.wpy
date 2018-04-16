@@ -61,7 +61,7 @@ canvas{
           maxDist
         );
 
-        ctx.setFillStyle('#4543a0')
+        ctx.setFillStyle('#22214f')
         ctx.fillRect(0, 0, ctxWidth, ctxHeight)
         ctx.setFillStyle('#FFFFFF')
         ctx.arc(center1.x, center1.y, radius1, 0, 2 * Math.PI, true)
@@ -73,8 +73,10 @@ canvas{
           ctx.arc(center2.x,center2.y,radius2,0,Math.PI * 2,true)
           ctx.fill()
         }
+        
 
         if(a.length>2) {
+
           // [p1, h1, h3, p3, p4, h4, h2, p2]
           ctx.moveTo(a[7][0], a[7][1])
           ctx.lineTo(a[0][0], a[0][1])
@@ -98,6 +100,7 @@ canvas{
           ctx.fill()
         }
 
+        ctx.setFillStyle('#FFFFFF')
         ctx.setFontSize(15)
         ctx.setFillStyle('#fb8788') 
         ctx.fillText(nick, (ctxWidth - ctx.measureText(nick).width) / 2, ctxWidth/2-25)

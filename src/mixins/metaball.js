@@ -1,3 +1,5 @@
+let ballCenter1,ballCenter2 //两个球的中心点
+
 function metaballToPath(p1, p2, p3, p4, h1, h2, h3, h4, escaped, r) { 
     return [ 'M', p1, 
              'C', h1, h3, p3, 
@@ -10,13 +12,17 @@ function dist(center1,center2){
     return Math.sqrt(Math.pow(center2[1]-center1[1],2)+Math.pow(center2[0]-center1[0],2))
 }
 
-function angle(center2, center1){
+function angle(center1,center2){
     return Math.atan((center2[1]-center1[1])/(center2[0]-center1[0]))
 }
 
 function getVector(center,angle,radius) {
-    let a = Math.sin(angle) * radius
-    let b = Math.cos(angle) * radius
+    let type = 1
+
+    if(ballCenter2[0]<ballCenter1[0]) type = -1
+    
+    let a = Math.sin(angle) * radius * type
+    let b = Math.cos(angle) * radius * type
 
     return [center[0]+b,center[1]+a]
 }
@@ -27,6 +33,7 @@ export const metaball = function (radius1, radius2, center1, center2, handleSize
     const d = dist(center1, center2); 
     const maxDist = radius1 + radius2 * 2.5; 
     let u1, u2;
+    ballCenter1 = center1,ballCenter2=center2;
 
     // No blob if a radius is 0 
     // or if distance between the circles is larger than max-dist 
